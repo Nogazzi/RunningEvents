@@ -57,9 +57,10 @@ public class RaceController {
         return null;//raceJpaRepository.findByName(race.getName()).get(0);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> removeEvent(@PathVariable final Long id){
         final Race toRemove = raceJpaRepository.findById(id);
+        log.info("Event to delete: " + toRemove.toString());
         if (toRemove != null) {
             raceJpaRepository.delete(toRemove);
             log.info("Deleted event: " + toRemove.toString());
@@ -69,9 +70,11 @@ public class RaceController {
         return ResponseEntity.ok("Item to delete was not found!");
     }
 
-    @RequestMapping(value = "/registersportevent", method = RequestMethod.POST)
-    ResponseEntity<String> registerNewEvent(@RequestBody Race input) {
+    @RequestMapping(value = "/registerevent", method = RequestMethod.POST)
+    public ResponseEntity<String> registerNewEvent(@RequestBody Race input) {
         log.info("Sent race details" + input);
+        Date data = new Date(input.getDate().getTime());
+        log.info("Formated date: " + data);
         raceJpaRepository.save(input);
         return ResponseEntity.ok("Event " + input.toString() + " added succefully.");
     }
